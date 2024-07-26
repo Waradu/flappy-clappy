@@ -1,5 +1,5 @@
 use crate::{has_user_input, Despawn, GameState, WindowSize};
-use bevy::prelude::*;
+use bevy::{asset::embedded_asset, prelude::*};
 
 pub struct BirdPlugin;
 
@@ -16,6 +16,10 @@ impl Plugin for BirdPlugin {
                 ),
             )
             .add_systems(OnEnter(GameState::Playing), spawn_player);
+
+        embedded_asset!(app, "bird/downflap.png");
+        embedded_asset!(app, "bird/midflap.png");
+        embedded_asset!(app, "bird/upflap.png");
     }
 }
 
@@ -50,9 +54,9 @@ pub struct CurrentTexture(pub u8);
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
 
-    let downflap: Handle<Image> = asset_server.load("bird/downflap.png");
-    let midflap: Handle<Image> = asset_server.load("bird/midflap.png");
-    let upflap: Handle<Image> = asset_server.load("bird/upflap.png");
+    let downflap: Handle<Image> = asset_server.load("embedded://flappy_clappy/bird/downflap.png");
+    let midflap: Handle<Image> = asset_server.load("embedded://flappy_clappy/bird/midflap.png");
+    let upflap: Handle<Image> = asset_server.load("embedded://flappy_clappy/bird/upflap.png");
 
     commands.insert_resource(BirdTextures {
         downflap: downflap.clone(),
@@ -62,7 +66,7 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let downflap: Handle<Image> = asset_server.load("bird/downflap.png");
+    let downflap: Handle<Image> = asset_server.load("embedded://flappy_clappy/bird/downflap.png");
 
     commands.spawn((
         Player,

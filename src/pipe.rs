@@ -2,8 +2,7 @@ use crate::Despawn;
 
 use super::{bird::Player, GameState, GameplaySpeed, WindowSize};
 use bevy::{
-    math::bounding::{Aabb2d, IntersectsVolume},
-    prelude::*,
+    asset::embedded_asset, math::bounding::{Aabb2d, IntersectsVolume}, prelude::*
 };
 use rand::Rng;
 
@@ -13,6 +12,8 @@ impl Plugin for PipePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, (scroll, spawn_pipe, check_pipe_collision))
             .insert_resource(PipeTimer(Timer::from_seconds(1.5, TimerMode::Repeating)));
+
+        embedded_asset!(app, "bird/pipe/green.png")
     }
 }
 
@@ -34,7 +35,7 @@ pub fn spawn_pipe(
         return;
     }
 
-    let texture = asser_server.load("bird/pipe/green.png");
+    let texture = asser_server.load("embedded://flappy_clappy/bird/pipe/green.png");
 
     let mut rng = rand::thread_rng();
     let y = rng.gen_range(-150.0..150.0);

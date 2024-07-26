@@ -1718,6 +1718,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d674e81391d1e1ab681a28d99df07927c6d4aa5b027d7da16ba32d1d21ecd99"
 
 [[package]]
+name = "flappy_clappy"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "log",
+ "rand",
+]
+
+[[package]]
 name = "flate2"
 version = "1.0.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2804,15 +2813,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52f0d54bde9774d3a51dcf281a5def240c71996bc6ca05d2c847ec8b2b216166"
 dependencies = [
  "libredox",
-]
-
-[[package]]
-name = "otaku"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "log",
- "rand",
 ]
 
 [[package]]

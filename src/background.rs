@@ -1,5 +1,5 @@
 use crate::{GameplaySpeed, WindowSize};
-use bevy::prelude::*;
+use bevy::{asset::embedded_asset, prelude::*};
 
 pub struct BackgroundPlugin;
 
@@ -8,6 +8,8 @@ impl Plugin for BackgroundPlugin {
         app.add_systems(Startup, spawn_background)
             .add_systems(Update, (move_background, resize_background))
             .insert_resource(OldWindowSize(Vec2::new(0.0, 0.0)));
+
+        embedded_asset!(app, "bird/background/day.png")
     }
 }
 
@@ -22,7 +24,7 @@ pub fn spawn_background(
     asset_server: Res<AssetServer>,
     window_size: Res<WindowSize>,
 ) {
-    let background = asset_server.load("bird/background/day.png");
+    let background = asset_server.load("embedded://flappy_clappy/bird/background/day.png");
 
     let texture_size = Vec2::new(288.0, 512.0);
     let cols = (window_size.0.x / texture_size.x).ceil() as i32 + 2;
