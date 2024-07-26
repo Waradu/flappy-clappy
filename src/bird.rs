@@ -1,11 +1,11 @@
+use crate::{has_user_input, Despawn, GameState, WindowSize};
 use bevy::prelude::*;
-use crate::{GameState, WindowSize, has_user_input};
 
 pub struct BirdPlugin;
 
 impl Plugin for BirdPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player)
+        app.add_systems(Startup, setup)
             .add_systems(
                 Update,
                 (
@@ -14,7 +14,8 @@ impl Plugin for BirdPlugin {
                     jump.run_if(has_user_input),
                     change_texture,
                 ),
-            );
+            )
+            .add_systems(OnEnter(GameState::Playing), spawn_player);
     }
 }
 
@@ -46,10 +47,7 @@ pub struct TextureTimer(pub Timer);
 #[derive(Component)]
 pub struct CurrentTexture(pub u8);
 
-pub fn spawn_player(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
 
     let downflap: Handle<Image> = asset_server.load("bird/downflap.png");
@@ -61,14 +59,19 @@ pub fn spawn_player(
         midflap: midflap.clone(),
         upflap: upflap.clone(),
     });
+}
+
+pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let downflap: Handle<Image> = asset_server.load("bird/downflap.png");
 
     commands.spawn((
         Player,
         Velocity(-1.),
-        Acceleration(-15.),
-        Speed(100.),
+        Acceleration(-12.),
+        Speed(80.),
         CurrentTexture(0),
-        Jump(7.),
+        Jump(5.),
+        Despawn,
         TextureTimer(Timer::from_seconds(0.2, TimerMode::Repeating)),
         SpriteBundle {
             sprite: Sprite {
@@ -110,6 +113,10 @@ pub fn apply_gravity(mut query: Query<(&mut Velocity, &Acceleration)>, time: Res
 }
 
 pub fn jump(mut query: Query<(&mut Velocity, &Jump), With<Player>>) {
+    if query.iter().len() != 1 {
+        return;
+    }
+
     let (mut velocity, strength) = query.single_mut();
 
     velocity.0 = strength.0;

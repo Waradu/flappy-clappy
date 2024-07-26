@@ -34,7 +34,8 @@ fn main() {
                 start_drag.run_if(input_just_pressed(MouseButton::Left)),
                 end_drag.run_if(input_just_released(MouseButton::Left)),
                 drag.run_if(dragging_true),
-            ).chain(),
+            )
+                .chain(),
         )
         .add_systems(Startup, setup)
         .run();
@@ -56,9 +57,11 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn window_position(mut q_primary_window: Query<&mut Window, With<PrimaryWindow>>) {
-    let mut window = q_primary_window.single_mut();
+    if q_primary_window.iter().len() != 1 {
+        return;
+    }
 
-    
+    let mut window = q_primary_window.single_mut();
 
     if let WindowPosition::At(mut pos) = window.position {
         pos.x += 20;
@@ -79,6 +82,4 @@ fn end_drag(mut dragging: ResMut<Dragging>) {
     dragging.0 = false;
 }
 
-fn drag() {
-    
-}
+fn drag() {}

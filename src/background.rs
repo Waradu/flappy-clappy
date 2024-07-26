@@ -12,7 +12,7 @@ impl Plugin for BackgroundPlugin {
 }
 
 #[derive(Resource)]
-struct OldWindowSize(Vec2);
+pub struct OldWindowSize(Vec2);
 
 #[derive(Component)]
 pub struct Background;
@@ -58,7 +58,7 @@ pub fn move_background(
     let texture_size = Vec2::new(288.0, 512.0);
 
     for mut transform in query.iter_mut() {
-        transform.translation.x -= speed.0 * time.delta_seconds();
+        transform.translation.x -= (speed.0 - 50.) * time.delta_seconds();
 
         let texture_size_x = texture_size.x * transform.scale.x;
 
